@@ -1,0 +1,28 @@
+# docker-compose.yml
+version: '3'
+services:
+  master-db:
+    build: .
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      REPLICA_USER: ${REPLICA_USER}
+      REPLICA_PASSWORD: ${REPLICA_PASSWORD}
+    volumes:
+      - ./init-master.sh:/docker-entrypoint-initdb.d/init-master.sh
+    ports:
+      - 5432:5432
+
+  slave-db:
+    build: .
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      REPLICA_USER: ${REPLICA_USER}
+      REPLICA_PASSWORD: ${REPLICA_PASSWORD}
+    volumes:
+      - ./init-slave.sh:/docker-entrypoint-initdb.d/init-slave.sh
+    ports:
+      - 5433:5432
